@@ -1,0 +1,17 @@
+name: build-vendor
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm init -y
+      - run: npm i ion-sdk-js@1.8.2 esbuild
+      - run: printf "export * from 'ion-sdk-js';\nexport { IonSFUJSONRPCSignal } from 'ion-sdk-js/lib/signal/json-rpc-impl';\n" > sdk-entry.js
+      - run: npx esbuild sdk-entry.js --bundle --format=iife --global-name=IonSDK --outfile=ion.bundle.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ion-bundle
+          path: ion.bundle.js
