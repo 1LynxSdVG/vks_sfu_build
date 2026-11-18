@@ -1,0 +1,15 @@
+name: build-ws
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm init -y
+      - run: npm i ws@8.18.0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ws-module
+          path: node_modules/ws
